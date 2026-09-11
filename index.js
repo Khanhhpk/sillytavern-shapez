@@ -37,7 +37,6 @@
     let frameEl = null;
     let shieldEl = null;
     let fabEl = null;
-    let topbarBtnEl = null;
 
     // Window dragging & resizing state
     let isDragging = false;
@@ -48,11 +47,14 @@
     let initialWidth = 0, initialHeight = 0;
     let preMaximizedRect = null;
 
-    // Floating Action Bubble (FAB) dragging state
+    // Floating Action Bubble (FAB) dragging state (rAF throttled)
     let isFabDragging = false;
     let fabStartX = 0, fabStartY = 0;
     let fabInitialLeft = 0, fabInitialTop = 0;
     let fabHasMoved = false;
+    let fabRafId = null;
+    let pendingFabX = null;
+    let pendingFabY = null;
 
     /**
      * Load settings from localStorage
@@ -96,13 +98,20 @@
     })();
 
     /**
+     * Resolve base URL for the game assets
+     */
+    function getGameBaseUrl() {
+        if (SCRIPT_BASE_URL) {
+            return `${SCRIPT_BASE_URL}/game`;
+        }
+        return "./game";
+    }
+
+    /**
      * Resolve the proper game index URL depending on SillyTavern environment
      */
     function getGameUrl() {
-        if (SCRIPT_BASE_URL) {
-            return `${SCRIPT_BASE_URL}/game/index.html`;
-        }
-        return "./game/index.html";
+        return `${getGameBaseUrl()}/index.html`;
     }
 
     /**
@@ -129,7 +138,7 @@
         headerEl.className = "st-shapez-header";
         headerEl.innerHTML = `
             <div class="st-shapez-title-group">
-                <span class="st-shapez-logo-icon">🔷</span>
+                <div class="st-shapez-logo-icon"><img src="${getGameBaseUrl()}/favicon.png" alt="Shapez" /></div>
                 <span class="st-shapez-title">Shapez Factory</span>
                 <span class="st-shapez-badge">v1.0</span>
             </div>
@@ -204,9 +213,11 @@
         fabEl = document.createElement("div");
         fabEl.id = "st-shapez-fab";
         fabEl.className = "st-shapez-fab";
-        fabEl.title = "Shapez Automation Factory (Kéo để di chuyển, click để mở/đóng)";
+        fabEl.title = "Shapez Automation Factory (Kéo để di chuyển, click để mở/thu nhỏ)";
         fabEl.innerHTML = `
-            <div class="st-shapez-fab-icon">🔷</div>
+            <div class="st-shapez-fab-icon">
+                <img src="${getGameBaseUrl()}/favicon.png" class="st-shapez-fab-img" alt="Shapez" />
+            </div>
             <span class="st-shapez-fab-pulse"></span>
             <div class="st-shapez-fab-tooltip">Shapez Factory</div>
         `;
@@ -272,7 +283,7 @@
         const deltaX = clientX - fabStartX;
         const deltaY = clientY - fabStartY;
 
-        if (Math.hypot(deltaX, deltaY) > 5) {
+        if (!fabHasMoved && Math.hypot(deltaX, deltaY) > 5) {
             fabHasMoved = true;
             fabEl.classList.add("dragging");
         }
@@ -285,10 +296,20 @@
             newX = Math.max(8, Math.min(window.innerWidth - 60, newX));
             newY = Math.max(8, Math.min(window.innerHeight - 60, newY));
 
-            fabEl.style.left = `${newX}px`;
-            fabEl.style.top = `${newY}px`;
-            fabEl.style.right = "auto";
-            fabEl.style.bottom = "auto";
+            pendingFabX = newX;
+            pendingFabY = newY;
+
+            if (!fabRafId) {
+                fabRafId = requestAnimationFrame(() => {
+                    if (fabEl && pendingFabX !== null && pendingFabY !== null) {
+                        fabEl.style.left = `${pendingFabX}px`;
+                        fabEl.style.top = `${pendingFabY}px`;
+                        fabEl.style.right = "auto";
+                        fabEl.style.bottom = "auto";
+                    }
+                    fabRafId = null;
+                });
+            }
 
             if (e.cancelable) e.preventDefault();
         }
@@ -298,6 +319,10 @@
         if (!isFabDragging) return;
 
         isFabDragging = false;
+        if (fabRafId) {
+            cancelAnimationFrame(fabRafId);
+            fabRafId = null;
+        }
         fabEl.classList.remove("dragging");
 
         if (fabHasMoved) {
@@ -497,7 +522,6 @@
             fabEl.classList.add("active");
             fabEl.classList.remove("minimized");
         }
-        if (topbarBtnEl) topbarBtnEl.classList.add("active");
 
         bringToFront();
         saveSettings();
@@ -512,7 +536,6 @@
             fabEl.classList.remove("active");
             fabEl.classList.remove("minimized");
         }
-        if (topbarBtnEl) topbarBtnEl.classList.remove("active");
 
         saveSettings();
     }
@@ -525,7 +548,6 @@
             fabEl.classList.remove("active");
             fabEl.classList.add("minimized");
         }
-        if (topbarBtnEl) topbarBtnEl.classList.remove("active");
 
         saveSettings();
     }
@@ -536,7 +558,7 @@
 
     function toggleWindow() {
         if (settings.isOpen && !settings.isMinimized) {
-            closeWindow();
+            minimizeWindow();
         } else if (settings.isMinimized) {
             restoreWindow();
         } else {
@@ -627,38 +649,12 @@
     }
 
     /**
-     * Inject Top Bar button into SillyTavern UI (if topbar exists)
-     */
-    function injectTopBarButton() {
-        if (document.getElementById("st-shapez-topbar-btn")) return;
-
-        const containers = [
-            document.getElementById("top-bar"),
-            document.getElementById("chat-top-bar"),
-            document.querySelector(".header-right"),
-            document.getElementById("extensions_menu")
-        ];
-
-        const target = containers.find(el => el !== null);
-        if (!target) return;
-
-        topbarBtnEl = document.createElement("div");
-        topbarBtnEl.id = "st-shapez-topbar-btn";
-        topbarBtnEl.className = "st-shapez-topbar-button";
-        topbarBtnEl.title = "Shapez Automation Factory (Side Game)";
-        topbarBtnEl.innerHTML = `<span>🔷</span>`;
-        topbarBtnEl.addEventListener("click", toggleWindow);
-        target.appendChild(topbarBtnEl);
-    }
-
-    /**
      * Extension Initialization
      */
     function init() {
         console.log(`[${EXT_ID}] Initializing Shapez Extension with Floating Action Bubble...`);
         loadSettings();
         createWindowDOM();
-        injectTopBarButton();
 
         // Restore saved state
         if (settings.isOpen) {
