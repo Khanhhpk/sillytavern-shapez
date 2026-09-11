@@ -69,17 +69,29 @@
         }
     }
 
+    // Determine extension base directory URL
+    const SCRIPT_BASE_URL = (() => {
+        if (document.currentScript && document.currentScript.src) {
+            return document.currentScript.src.substring(0, document.currentScript.src.lastIndexOf("/"));
+        }
+        const scripts = document.getElementsByTagName("script");
+        for (let i = scripts.length - 1; i >= 0; i--) {
+            const src = scripts[i].src || "";
+            if (src.includes("index.js") || src.includes(EXT_ID)) {
+                return src.substring(0, src.lastIndexOf("/"));
+            }
+        }
+        return "";
+    })();
+
     /**
      * Resolve the proper game index URL depending on SillyTavern environment
      */
     function getGameUrl() {
-        // Check current script URL to discover relative path
-        const currentScript = document.currentScript;
-        if (currentScript && currentScript.src) {
-            const baseUrl = currentScript.src.substring(0, currentScript.src.lastIndexOf("/"));
-            return `${baseUrl}/game/index.html`;
+        if (SCRIPT_BASE_URL) {
+            return `${SCRIPT_BASE_URL}/game/index.html`;
         }
-        return settings.gamePath;
+        return "./game/index.html";
     }
 
     /**
