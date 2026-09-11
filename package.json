@@ -1,0 +1,31 @@
+{
+  "name": "sillytavern-shapez",
+  "version": "1.0.0",
+  "description": "Play the open-source factory automation game Shapez in a customizable, draggable, floating window directly inside SillyTavern.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node scripts/check-codebase.js",
+    "lint:js": "eslint index.js scripts/",
+    "lint:html": "htmlhint game/index.html",
+    "lint": "npm run lint:js && npm run lint:html",
+    "check": "npm test && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Khanhhpk/sillytavern-shapez.git"
+  },
+  "keywords": [
+    "sillytavern",
+    "extension",
+    "shapez",
+    "game",
+    "automation",
+    "factory"
+  ],
+  "author": "Khanhhpk",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "htmlhint": "^1.1.4"
+  }
+}

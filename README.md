@@ -55,6 +55,31 @@ Reload SillyTavern in your browser.
 
 ---
 
+## 🛠️ Development & Quality Assurance
+
+This extension repository includes an automated verification and linting test suite:
+
+- **Run Standalone Verification (Zero-dependency)**:
+  ```bash
+  npm test
+  # Or directly via Node.js:
+  node scripts/check-codebase.js
+  ```
+- **Run ESLint (JavaScript)**:
+  ```bash
+  npm run lint:js
+  ```
+- **Run HTMLHint (HTML & Entities)**:
+  ```bash
+  npm run lint:html
+  ```
+- **Run Complete Suite**:
+  ```bash
+  npm run check
+  ```
+
+---
+
 ## 📜 Credits & License
 
 - **Shapez** game engine and original assets by [Tobias Springer (tobspr Games)](https://github.com/tobspr-games/shapez.io) under the **GNU General Public License v3.0 (GPL-3.0)**.
