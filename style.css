@@ -258,57 +258,117 @@
     cursor: e-resize;
 }
 
-/* Minimized Dock Badge (Floating bubble) */
-#st-shapez-dock-badge {
+/* Pinned Window Styling */
+#st-shapez-window.st-shapez-pinned {
+    border-color: rgba(99, 102, 241, 0.8) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7),
+                0 0 28px rgba(99, 102, 241, 0.5) !important;
+}
+
+/* Floating Action Bubble (FAB - Bóng nổi mở game) */
+#st-shapez-fab {
     position: fixed;
-    z-index: 99998;
-    bottom: 24px;
-    right: 24px;
+    z-index: 99990;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 30px;
-    background: rgba(20, 22, 34, 0.92);
-    border: 1px solid var(--st-shapez-border);
+    justify-content: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
-                0 0 16px var(--st-shapez-glow);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    cursor: pointer;
+                0 0 18px rgba(99, 102, 241, 0.5);
+    cursor: grab;
     user-select: none;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    touch-action: none;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-#st-shapez-dock-badge:hover {
-    transform: translateY(-2px) scale(1.03);
-    border-color: var(--st-shapez-accent);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6),
-                0 0 24px rgba(99, 102, 241, 0.4);
+#st-shapez-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55),
+                0 0 26px rgba(99, 102, 241, 0.75);
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
-#st-shapez-dock-badge.st-shapez-hidden {
-    display: none !important;
+#st-shapez-fab.dragging {
+    cursor: grabbing;
+    transform: scale(1.15);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7),
+                0 0 32px rgba(99, 102, 241, 0.85);
+    transition: none;
 }
 
-.st-shapez-dock-icon {
-    font-size: 16px;
-    animation: st-shapez-spin 12s linear infinite;
+#st-shapez-fab.active {
+    border-color: #38bdf8;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5),
+                0 0 24px rgba(56, 189, 248, 0.7);
 }
 
-.st-shapez-dock-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--st-shapez-text);
+#st-shapez-fab.minimized {
+    border-color: #10b981;
+    animation: st-shapez-fab-bounce 2s infinite ease-in-out;
 }
 
-.st-shapez-dock-pulse {
-    width: 8px;
-    height: 8px;
+.st-shapez-fab-icon {
+    font-size: 24px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+    transition: transform 0.25s ease;
+}
+
+#st-shapez-fab:hover .st-shapez-fab-icon {
+    transform: rotate(15deg) scale(1.05);
+}
+
+.st-shapez-fab-pulse {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--st-shapez-success);
-    box-shadow: 0 0 8px var(--st-shapez-success);
-    animation: st-shapez-pulse 2s ease-in-out infinite;
+    background: #10b981;
+    border: 2px solid #181b26;
+    box-shadow: 0 0 8px #10b981;
+    display: none;
+}
+
+#st-shapez-fab.ai-active .st-shapez-fab-pulse {
+    display: block;
+    animation: st-shapez-pulse 1s ease-in-out infinite;
+}
+
+/* Tooltip on hover */
+.st-shapez-fab-tooltip {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 17, 26, 0.95);
+    color: #e2e8f0;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 99991;
+}
+
+#st-shapez-fab:hover .st-shapez-fab-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(2px);
 }
 
 @keyframes st-shapez-pulse {
@@ -322,12 +382,12 @@
     }
 }
 
-@keyframes st-shapez-spin {
-    from {
-        transform: rotate(0deg);
+@keyframes st-shapez-fab-bounce {
+    0%, 100% {
+        transform: translateY(0);
     }
-    to {
-        transform: rotate(360deg);
+    50% {
+        transform: translateY(-4px);
     }
 }
 
