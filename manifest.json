@@ -1,0 +1,11 @@
+{
+  "display_name": "Shapez Side Game",
+  "loading_order": 100,
+  "requires": [],
+  "optional": [],
+  "css": "style.css",
+  "js": "index.js",
+  "author": "Khanhhpk",
+  "version": "1.0.0",
+  "description": "Play the open-source factory automation game Shapez in a customizable, draggable, floating window directly inside SillyTavern."
+}

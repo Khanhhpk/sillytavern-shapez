@@ -1,0 +1,21 @@
+# Source build directory
+shapez-src/
+node_modules/
+
+# Build artifacts
+shapez-src/build/
+shapez-src/build_output/
+shapez-src/res_built/
+shapez-src/tmp_standalone_files/
+shapez-src/src/js/built-temp/
+
+# Logs and environment
+*.log
+.env
+.DS_Store
+Thumbs.db
+
+# IDE and temp
+.vscode/
+.idea/
+temp_test/

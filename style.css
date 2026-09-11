@@ -1,0 +1,353 @@
+/* ==========================================================================
+   Shapez Side Game Extension - Floating Window Styles
+   Author: Khanhhpk
+   ========================================================================== */
+
+:root {
+    --st-shapez-bg: rgba(26, 28, 38, 0.92);
+    --st-shapez-bg-header: rgba(18, 20, 29, 0.95);
+    --st-shapez-border: rgba(99, 102, 241, 0.25);
+    --st-shapez-border-hover: rgba(99, 102, 241, 0.5);
+    --st-shapez-glow: rgba(99, 102, 241, 0.18);
+    --st-shapez-accent: #6366f1;
+    --st-shapez-accent-light: #818cf8;
+    --st-shapez-text: #e2e8f0;
+    --st-shapez-text-dim: #94a3b8;
+    --st-shapez-danger: #ef4444;
+    --st-shapez-warning: #f59e0b;
+    --st-shapez-success: #10b981;
+}
+
+/* Floating Window Container */
+#st-shapez-window {
+    position: fixed;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    min-width: 380px;
+    min-height: 260px;
+    width: 820px;
+    height: 560px;
+    max-width: 98vw;
+    max-height: 96vh;
+    border-radius: 12px;
+    background: var(--st-shapez-bg);
+    border: 1px solid var(--st-shapez-border);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55),
+                0 0 20px var(--st-shapez-glow);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    overflow: hidden;
+    user-select: none;
+    transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#st-shapez-window.st-shapez-hidden {
+    display: none !important;
+}
+
+#st-shapez-window.st-shapez-active {
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7),
+                0 0 28px rgba(99, 102, 241, 0.3);
+    border-color: var(--st-shapez-border-hover);
+}
+
+/* Window Header */
+.st-shapez-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 10px 0 14px;
+    background: var(--st-shapez-bg-header);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: grab;
+    flex-shrink: 0;
+}
+
+.st-shapez-header:active {
+    cursor: grabbing;
+}
+
+.st-shapez-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--st-shapez-text);
+    letter-spacing: 0.3px;
+    pointer-events: none;
+}
+
+.st-shapez-logo-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+    font-size: 11px;
+}
+
+.st-shapez-title {
+    color: var(--st-shapez-text);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.st-shapez-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 9999px;
+    background: rgba(99, 102, 241, 0.2);
+    color: var(--st-shapez-accent-light);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+/* Header Controls */
+.st-shapez-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.st-shapez-btn {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--st-shapez-text-dim);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.st-shapez-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--st-shapez-text);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.st-shapez-btn:active {
+    transform: scale(0.94);
+}
+
+.st-shapez-btn.active {
+    background: rgba(99, 102, 241, 0.25);
+    color: var(--st-shapez-accent-light);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.st-shapez-btn.close:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* Opacity Preset Selector */
+.st-shapez-opacity-dropdown {
+    position: relative;
+}
+
+.st-shapez-opacity-menu {
+    position: absolute;
+    top: 32px;
+    right: 0;
+    background: rgba(20, 22, 32, 0.96);
+    border: 1px solid var(--st-shapez-border);
+    border-radius: 8px;
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    z-index: 100000;
+}
+
+.st-shapez-opacity-menu.open {
+    display: flex;
+}
+
+.st-shapez-opacity-item {
+    font-size: 11px;
+    padding: 4px 10px;
+    color: var(--st-shapez-text);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.12s;
+}
+
+.st-shapez-opacity-item:hover {
+    background: rgba(99, 102, 241, 0.25);
+    color: #fff;
+}
+
+.st-shapez-opacity-item.selected {
+    color: var(--st-shapez-accent-light);
+    font-weight: bold;
+}
+
+/* Window Body & Iframe */
+.st-shapez-body {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: calc(100% - 38px);
+    background: #232530;
+    overflow: hidden;
+}
+
+#st-shapez-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #1e1f29;
+}
+
+/* Pointer Event Shield (Prevents iframe from swallowing mouse while dragging/resizing) */
+.st-shapez-shield {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: none;
+    background: transparent;
+    cursor: inherit;
+}
+
+.st-shapez-shield.active {
+    display: block;
+}
+
+/* Resizing handles */
+.st-shapez-resize-handle {
+    position: absolute;
+    z-index: 20;
+}
+
+.st-shapez-resize-se {
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    cursor: se-resize;
+    background: linear-gradient(135deg, transparent 50%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0.25) 75%, transparent 75%, transparent 85%, rgba(255, 255, 255, 0.4) 85%);
+    border-bottom-right-radius: 10px;
+}
+
+.st-shapez-resize-s {
+    bottom: 0;
+    left: 10px;
+    right: 14px;
+    height: 6px;
+    cursor: s-resize;
+}
+
+.st-shapez-resize-e {
+    top: 38px;
+    right: 0;
+    bottom: 14px;
+    width: 6px;
+    cursor: e-resize;
+}
+
+/* Minimized Dock Badge (Floating bubble) */
+#st-shapez-dock-badge {
+    position: fixed;
+    z-index: 99998;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    background: rgba(20, 22, 34, 0.92);
+    border: 1px solid var(--st-shapez-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45),
+                0 0 16px var(--st-shapez-glow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#st-shapez-dock-badge:hover {
+    transform: translateY(-2px) scale(1.03);
+    border-color: var(--st-shapez-accent);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6),
+                0 0 24px rgba(99, 102, 241, 0.4);
+}
+
+#st-shapez-dock-badge.st-shapez-hidden {
+    display: none !important;
+}
+
+.st-shapez-dock-icon {
+    font-size: 16px;
+    animation: st-shapez-spin 12s linear infinite;
+}
+
+.st-shapez-dock-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--st-shapez-text);
+}
+
+.st-shapez-dock-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--st-shapez-success);
+    box-shadow: 0 0 8px var(--st-shapez-success);
+    animation: st-shapez-pulse 2s ease-in-out infinite;
+}
+
+@keyframes st-shapez-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+@keyframes st-shapez-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* SillyTavern Top-Bar Button */
+.st-shapez-topbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 0 6px;
+    transition: color 0.15s, transform 0.15s;
+}
+
+.st-shapez-topbar-button:hover {
+    color: var(--st-shapez-accent-light) !important;
+    transform: scale(1.1);
+}
+
+.st-shapez-topbar-button.active {
+    color: var(--st-shapez-accent) !important;
+    text-shadow: 0 0 8px var(--st-shapez-accent);
+}
