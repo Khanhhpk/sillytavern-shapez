@@ -59,3 +59,4 @@ Reload SillyTavern in your browser.
 
 - **Shapez** game engine and original assets by [Tobias Springer (tobspr Games)](https://github.com/tobspr-games/shapez.io) under the **GNU General Public License v3.0 (GPL-3.0)**.
 - Extension integration and floating window UI for SillyTavern by **Khanhhpk**.
+
