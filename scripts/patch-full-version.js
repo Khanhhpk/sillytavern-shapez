@@ -72,7 +72,19 @@ if (code.includes(t5)) {
     console.log("ℹ Already patched platform wrapper fullscreen");
 }
 
+// 6. Disable Unstable Beta Version HUD banner overlay
+const t6 = 'function beta_overlay_createElements(e){this.element=Object(v.z)(e,"ingame_HUD_BetaOverlay",[],"<h2>UNSTABLE BETA VERSION</h2><span>Unfinalized & potential buggy content!</span>")}';
+const r6 = "function beta_overlay_createElements(e){}";
+if (code.includes(t6)) {
+    code = code.replace(t6, r6);
+    console.log("✔ Patched HUDBetaOverlay -> removed 'UNSTABLE BETA VERSION' HUD banner");
+    patched = true;
+} else if (code.includes(r6)) {
+    console.log("ℹ Already patched HUDBetaOverlay");
+}
+
 if (patched) {
     fs.writeFileSync(bundlePath, code, "utf8");
     console.log("✔ Successfully updated game/bundle.js with full version unlock.");
 }
+

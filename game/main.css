@@ -3,3 +3,5 @@
 #state_MainMenuState .socialLinks, #state_MainMenuState .author, #state_MainMenuState .changelog, #state_MainMenuState .steamSso, #state_MainMenuState .sideContainer, #state_MainMenuState .standaloneBanner, #state_MainMenuState .mainNews, #state_MainMenuState .puzzleContainer, #state_MainMenuState .wegameDisclaimer { display: none !important; }
 #state_MainMenuState .mainWrapper { grid-template-columns: 1fr !important; justify-content: center !important; align-items: center !important; margin-top: calc(24px * var(--ui-scale)) !important; }
 #state_MainMenuState .mainContainer { max-width: 480px !important; width: 100% !important; margin: 0 auto !important; }
+#ingame_HUD_BetaOverlay { display: none !important; }
+
